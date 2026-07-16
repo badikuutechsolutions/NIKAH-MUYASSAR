@@ -1,0 +1,27 @@
+import Link from 'next/link'
+
+export default function UnauthorizedPage() {
+  return (
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="text-center max-w-md">
+        <div className="text-6xl mb-4">🚫</div>
+        <h1 className="text-2xl font-display font-bold text-charcoal mb-2">Access Denied</h1>
+        <p className="text-gray-500 mb-6">You do not have permission to access this page. Please sign in with the appropriate account type.</p>
+        <div className="flex gap-3 justify-center">
+          <Link
+            href="/login"
+            className="inline-flex items-center px-5 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center px-5 py-2.5 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary hover:text-white transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
