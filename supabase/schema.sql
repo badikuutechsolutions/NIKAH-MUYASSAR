@@ -1,392 +1,343 @@
 -- =====================================================
--- Nikah Muyassar - Database Schema
+-- Nikah Muyassar - Complete Database Schema
 -- All 9 tables with RLS policies and triggers
 -- =====================================================
 
 -- 1. PROFILES
-CREATE TABLE profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT,
+CREATE TABLE IF NOT EXISTS profiles (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  role TEXT NOT NULL DEFAULT 'applicant' CHECK (role IN ('applicant', 'sponsor', 'admin', 'reviewer')),
   full_name TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('applicant', 'sponsor', 'admin', 'scholar')),
-  avatar_url TEXT,
+  email TEXT NOT NULL UNIQUE,
   phone TEXT,
+  whatsapp TEXT,
   country TEXT,
-  is_anonymous BOOLEAN DEFAULT false,
-  is_onboarded BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+  city TEXT,
+  profile_photo TEXT,
+  gender TEXT CHECK (gender IN ('male', 'female')),
+  date_of_birth DATE,
+  nationality TEXT,
+  languages TEXT[],
+  bio TEXT,
+  is_verified BOOLEAN DEFAULT FALSE,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own profile"
-  ON profiles FOR SELECT
-  USING (auth.uid() = id);
+CREATE POLICY IF NOT EXISTS "users_own_profile" ON profiles
+  FOR ALL USING (auth.uid() = id);
 
-CREATE POLICY "Users can insert their own profile"
-  ON profiles FOR INSERT
-  WITH CHECK (auth.uid() = id);
-
-CREATE POLICY "Users can update their own profile"
-  ON profiles FOR UPDATE
-  USING (auth.uid() = id);
-
-CREATE POLICY "Sponsors can view applicant profiles"
-  ON profiles FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role IN ('sponsor', 'admin', 'scholar')
-    )
+CREATE POLICY IF NOT EXISTS "admin_all_profiles" ON profiles
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') IN ('admin', 'reviewer')
   );
 
 -- 2. APPLICATIONS
-CREATE TABLE applications (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  applicant_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS applications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  applicant_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  full_name TEXT NOT NULL,
+  age INTEGER NOT NULL CHECK (age >= 18 AND age <= 80),
+  gender TEXT NOT NULL CHECK (gender IN ('male', 'female')),
+  marital_status TEXT DEFAULT 'single' CHECK (marital_status IN ('single', 'widowed', 'divorced')),
+  nationality TEXT NOT NULL,
+  country_of_residence TEXT NOT NULL,
+  city TEXT NOT NULL,
+  occupation TEXT,
+  phone TEXT,
+  whatsapp TEXT,
+  monthly_income DECIMAL(10, 2),
+  income_currency TEXT DEFAULT 'USD',
+  has_employment BOOLEAN DEFAULT FALSE,
+  employment_type TEXT CHECK (employment_type IN ('employed', 'self-employed', 'unemployed', 'student')),
+  financial_hardship_desc TEXT NOT NULL,
+  has_existing_debt BOOLEAN DEFAULT FALSE,
+  debt_description TEXT,
+  estimated_wedding_cost DECIMAL(10, 2),
+  amount_requested DECIMAL(10, 2) NOT NULL,
+  amount_raised DECIMAL(10, 2) DEFAULT 0,
+  religiosity_level TEXT CHECK (religiosity_level IN ('practicing', 'moderate', 'learning')),
+  is_already_engaged BOOLEAN DEFAULT FALSE,
   partner_name TEXT,
-  country TEXT NOT NULL,
-  city TEXT,
-  amount_requested DECIMAL(12,2) NOT NULL,
-  amount_raised DECIMAL(12,2) DEFAULT 0,
-  financial_story TEXT NOT NULL,
-  personal_story TEXT,
-  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'pending', 'under_review', 'approved', 'funded', 'completed', 'rejected')),
-  urgency TEXT DEFAULT 'normal' CHECK (urgency IN ('low', 'normal', 'high', 'urgent')),
-  gender TEXT CHECK (gender IN ('male', 'female')),
+  partner_nationality TEXT,
+  how_they_met TEXT,
+  local_mosque_name TEXT,
+  local_mosque_city TEXT,
+  imam_reference_name TEXT,
+  imam_contact TEXT,
+  reason_for_marriage TEXT,
+  id_document_url TEXT,
+  income_proof_url TEXT,
+  imam_letter_url TEXT,
+  additional_docs TEXT[],
+  profile_photo_url TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'under_review', 'info_requested', 'approved', 'sponsored', 'partially_funded', 'fully_funded', 'completed', 'rejected', 'withdrawn')),
+  urgency_level TEXT DEFAULT 'normal' CHECK (urgency_level IN ('low', 'normal', 'high', 'critical')),
+  urgency_reason TEXT,
+  reviewer_id UUID REFERENCES profiles(id),
+  reviewer_notes TEXT,
+  admin_notes TEXT,
   rejection_reason TEXT,
-  reviewed_by UUID REFERENCES profiles(id),
+  sponsor_id UUID REFERENCES profiles(id),
+  sponsor_notes TEXT,
+  review_meeting_date TIMESTAMPTZ,
+  review_meeting_link TEXT,
+  review_meeting_notes TEXT,
+  review_meeting_type TEXT CHECK (review_meeting_type IN ('video', 'phone', 'in_person')),
+  is_anonymous BOOLEAN DEFAULT FALSE,
+  display_alias TEXT,
+  consent_to_share_story BOOLEAN DEFAULT FALSE,
+  submitted_at TIMESTAMPTZ DEFAULT NOW(),
   reviewed_at TIMESTAMPTZ,
-  submitted_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+  approved_at TIMESTAMPTZ,
+  sponsored_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 ALTER TABLE applications ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Applicants can CRUD their own applications"
-  ON applications FOR ALL
-  USING (applicant_id = auth.uid())
-  WITH CHECK (applicant_id = auth.uid());
+CREATE POLICY IF NOT EXISTS "applicant_own_applications" ON applications
+  FOR ALL USING (auth.uid() = applicant_id);
 
-CREATE POLICY "Sponsors can view approved applications"
-  ON applications FOR SELECT
-  USING (
-    status IN ('approved', 'funded', 'completed')
-    AND EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role IN ('sponsor', 'admin', 'scholar')
-    )
+CREATE POLICY IF NOT EXISTS "sponsor_view_approved" ON applications
+  FOR SELECT USING (
+    status IN ('approved', 'sponsored', 'partially_funded') AND
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'sponsor'
   );
 
-CREATE POLICY "Admins can manage all applications"
-  ON applications FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role IN ('admin', 'scholar')
-    )
+CREATE POLICY IF NOT EXISTS "admin_reviewer_all_applications" ON applications
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') IN ('admin', 'reviewer')
   );
 
 -- 3. SPONSORSHIPS
-CREATE TABLE sponsorships (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  sponsor_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  application_id UUID NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
-  amount DECIMAL(12,2) NOT NULL,
-  message TEXT,
-  is_anonymous BOOLEAN DEFAULT false,
-  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'cancelled')),
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+CREATE TABLE IF NOT EXISTS sponsorships (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  sponsor_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  application_id UUID REFERENCES applications(id) ON DELETE CASCADE NOT NULL,
+  amount_pledged DECIMAL(10, 2) NOT NULL,
+  amount_paid DECIMAL(10, 2) DEFAULT 0,
+  currency TEXT DEFAULT 'USD',
+  exchange_rate DECIMAL(10, 4),
+  payment_method TEXT CHECK (payment_method IN ('bank_transfer', 'online', 'cash', 'cheque', 'crypto')),
+  payment_ref TEXT,
+  payment_proof_url TEXT,
+  status TEXT DEFAULT 'pledged' CHECK (status IN ('pledged', 'partial', 'completed', 'refunded', 'cancelled')),
+  sponsor_message TEXT,
+  is_anonymous BOOLEAN DEFAULT FALSE,
+  is_zakat BOOLEAN DEFAULT FALSE,
+  is_sadaqah BOOLEAN DEFAULT TRUE,
+  pledged_at TIMESTAMPTZ DEFAULT NOW(),
+  paid_at TIMESTAMPTZ,
+  confirmed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 ALTER TABLE sponsorships ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Sponsors can manage their own sponsorships"
-  ON sponsorships FOR ALL
-  USING (sponsor_id = auth.uid())
-  WITH CHECK (sponsor_id = auth.uid());
+CREATE POLICY IF NOT EXISTS "sponsor_own_sponsorships" ON sponsorships
+  FOR ALL USING (auth.uid() = sponsor_id);
 
-CREATE POLICY "Applicants can view sponsorships for their applications"
-  ON sponsorships FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM applications a
-      WHERE a.id = application_id AND a.applicant_id = auth.uid()
-    )
+CREATE POLICY IF NOT EXISTS "applicant_view_own_sponsorships" ON sponsorships
+  FOR SELECT USING (
+    application_id IN (SELECT id FROM applications WHERE applicant_id = auth.uid())
   );
 
-CREATE POLICY "Admins can manage all sponsorships"
-  ON sponsorships FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
+CREATE POLICY IF NOT EXISTS "admin_all_sponsorships" ON sponsorships
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
   );
 
--- 4. DOCUMENTS
-CREATE TABLE documents (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  application_id UUID NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
-  profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('id', 'proof_of_income', 'imam_letter', 'additional', 'other')),
-  url TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT now()
+-- 4. NOTIFICATIONS
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('application_submitted', 'application_under_review', 'info_requested', 'meeting_scheduled', 'meeting_reminder', 'application_approved', 'application_rejected', 'sponsor_matched', 'sponsorship_received', 'payment_confirmed', 'marriage_completed', 'new_application', 'new_sponsorship_pledge', 'document_request', 'system_announcement')),
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  link TEXT,
+  metadata JSONB,
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(user_id, is_read);
 
-CREATE POLICY "Users can manage their own documents"
-  ON documents FOR ALL
-  USING (
-    profile_id = auth.uid()
-    OR EXISTS (
-      SELECT 1 FROM applications a
-      WHERE a.id = application_id AND a.applicant_id = auth.uid()
-    )
-  );
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Admins and scholars can view documents"
-  ON documents FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role IN ('admin', 'scholar')
-    )
-  );
+CREATE POLICY IF NOT EXISTS "own_notifications" ON notifications
+  FOR ALL USING (auth.uid() = user_id);
 
--- 5. REVIEWS
-CREATE TABLE reviews (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  application_id UUID NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
-  reviewer_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  status TEXT NOT NULL CHECK (status IN ('pending', 'approved', 'rejected', 'needs_info')),
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+-- 5. MEETINGS
+CREATE TABLE IF NOT EXISTS meetings (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  application_id UUID REFERENCES applications(id) ON DELETE CASCADE NOT NULL,
+  scheduled_by UUID REFERENCES profiles(id) NOT NULL,
+  applicant_id UUID REFERENCES profiles(id) NOT NULL,
+  reviewer_id UUID REFERENCES profiles(id),
+  meeting_type TEXT NOT NULL CHECK (meeting_type IN ('video', 'phone', 'in_person')),
+  meeting_date TIMESTAMPTZ NOT NULL,
+  duration_mins INTEGER DEFAULT 30,
+  timezone TEXT DEFAULT 'UTC',
+  meeting_link TEXT,
+  meeting_password TEXT,
+  location TEXT,
+  phone_number TEXT,
+  agenda TEXT,
+  status TEXT DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'completed', 'cancelled', 'rescheduled', 'no_show')),
+  outcome TEXT,
+  outcome_action TEXT CHECK (outcome_action IN ('approve', 'reject', 'request_more_info', 'reschedule', 'pending')),
+  reminder_sent_1h BOOLEAN DEFAULT FALSE,
+  reminder_sent_24h BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+ALTER TABLE meetings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Reviewers can manage their own reviews"
-  ON reviews FOR ALL
-  USING (reviewer_id = auth.uid())
-  WITH CHECK (reviewer_id = auth.uid());
+CREATE POLICY IF NOT EXISTS "applicant_own_meetings" ON meetings
+  FOR SELECT USING (auth.uid() = applicant_id);
 
-CREATE POLICY "Admins can view all reviews"
-  ON reviews FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
+CREATE POLICY IF NOT EXISTS "reviewer_assigned_meetings" ON meetings
+  FOR ALL USING (auth.uid() = reviewer_id);
+
+CREATE POLICY IF NOT EXISTS "admin_all_meetings" ON meetings
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
   );
 
-CREATE POLICY "Applicants can view reviews on their applications"
-  ON reviews FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM applications a
-      WHERE a.id = application_id AND a.applicant_id = auth.uid()
-    )
-  );
-
--- 6. FAQS
-CREATE TABLE faqs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  category TEXT NOT NULL CHECK (category IN ('general', 'applicant', 'sponsor', 'islamic', 'process')),
-  question TEXT NOT NULL,
-  answer TEXT NOT NULL,
-  order_index INTEGER NOT NULL DEFAULT 0,
-  is_published BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Anyone can view published FAQs"
-  ON faqs FOR SELECT
-  USING (is_published = true);
-
-CREATE POLICY "Admins can manage FAQs"
-  ON faqs FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
-  );
-
--- 7. PLATFORM_STATS
-CREATE TABLE platform_stats (
-  id INTEGER PRIMARY KEY DEFAULT 1,
-  total_applications INTEGER NOT NULL DEFAULT 0,
-  total_approved INTEGER NOT NULL DEFAULT 0,
-  total_completed INTEGER NOT NULL DEFAULT 0,
-  total_sponsors INTEGER NOT NULL DEFAULT 0,
-  total_amount_raised DECIMAL(14,2) NOT NULL DEFAULT 0,
-  countries_reached INTEGER NOT NULL DEFAULT 0,
-  updated_at TIMESTAMPTZ DEFAULT now(),
-  CONSTRAINT single_row CHECK (id = 1)
-);
-
-ALTER TABLE platform_stats ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Anyone can view platform stats"
-  ON platform_stats FOR SELECT
-  USING (true);
-
-CREATE POLICY "Admins can update platform stats"
-  ON platform_stats FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
-  );
-
--- 8. SUCCESS_STORIES
-CREATE TABLE success_stories (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+-- 6. SUCCESS_STORIES
+CREATE TABLE IF NOT EXISTS success_stories (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  application_id UUID REFERENCES applications(id),
   couple_alias TEXT NOT NULL,
   story_text TEXT NOT NULL,
   story_excerpt TEXT,
-  country TEXT,
   photo_url TEXT,
-  is_featured BOOLEAN DEFAULT false,
-  is_published BOOLEAN DEFAULT false,
-  tags TEXT[] DEFAULT '{}',
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+  wedding_date DATE,
+  country TEXT,
+  city TEXT,
+  is_featured BOOLEAN DEFAULT FALSE,
+  is_published BOOLEAN DEFAULT FALSE,
+  views_count INTEGER DEFAULT 0,
+  likes_count INTEGER DEFAULT 0,
+  tags TEXT[],
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  published_at TIMESTAMPTZ
 );
 
 ALTER TABLE success_stories ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Anyone can view published success stories"
-  ON success_stories FOR SELECT
-  USING (is_published = true);
+CREATE POLICY IF NOT EXISTS "public_read_published_stories" ON success_stories
+  FOR SELECT USING (is_published = TRUE);
 
-CREATE POLICY "Admins can manage success stories"
-  ON success_stories FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
+CREATE POLICY IF NOT EXISTS "admin_manage_stories" ON success_stories
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
   );
 
--- 9. TRANSACTIONS
-CREATE TABLE transactions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  sponsorship_id UUID NOT NULL REFERENCES sponsorships(id) ON DELETE CASCADE,
-  sponsor_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  application_id UUID NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
-  amount DECIMAL(12,2) NOT NULL,
-  currency TEXT DEFAULT 'USD',
-  payment_method TEXT,
-  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed', 'refunded')),
-  stripe_payment_intent_id TEXT,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+-- 7. FAQS
+CREATE TABLE IF NOT EXISTS faqs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  category TEXT NOT NULL CHECK (category IN ('applicant', 'sponsor', 'general', 'islamic', 'process')),
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  order_index INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Sponsors can view their own transactions"
-  ON transactions FOR SELECT
-  USING (sponsor_id = auth.uid());
+CREATE POLICY IF NOT EXISTS "public_read_active_faqs" ON faqs
+  FOR SELECT USING (is_active = TRUE);
 
-CREATE POLICY "Admins can manage all transactions"
-  ON transactions FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles p
-      WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
+CREATE POLICY IF NOT EXISTS "admin_manage_faqs" ON faqs
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+  );
+
+-- 8. CONTACT_MESSAGES
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  category TEXT CHECK (category IN ('general', 'application', 'sponsorship', 'technical', 'media', 'other')),
+  is_resolved BOOLEAN DEFAULT FALSE,
+  resolved_by UUID REFERENCES profiles(id),
+  resolved_at TIMESTAMPTZ,
+  admin_notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY IF NOT EXISTS "anyone_can_insert_contact" ON contact_messages
+  FOR INSERT WITH CHECK (TRUE);
+
+CREATE POLICY IF NOT EXISTS "admin_manage_contacts" ON contact_messages
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+  );
+
+-- 9. PLATFORM_STATS
+CREATE TABLE IF NOT EXISTS platform_stats (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  total_applications INTEGER DEFAULT 0,
+  total_approved INTEGER DEFAULT 0,
+  total_completed INTEGER DEFAULT 0,
+  total_sponsors INTEGER DEFAULT 0,
+  total_amount_raised DECIMAL(12, 2) DEFAULT 0,
+  countries_reached INTEGER DEFAULT 0,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO platform_stats (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+ALTER TABLE platform_stats ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY IF NOT EXISTS "public_read_platform_stats" ON platform_stats
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY IF NOT EXISTS "admin_update_platform_stats" ON platform_stats
+  FOR ALL USING (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
   );
 
 -- TRIGGERS
-
--- Trigger: auto-update updated_at on profiles
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.updated_at = now();
+  NEW.updated_at = NOW();
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_profiles_updated_at
+CREATE TRIGGER IF NOT EXISTS profiles_updated_at
   BEFORE UPDATE ON profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER trg_applications_updated_at
+CREATE TRIGGER IF NOT EXISTS applications_updated_at
   BEFORE UPDATE ON applications
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER trg_sponsorships_updated_at
+CREATE TRIGGER IF NOT EXISTS sponsorships_updated_at
   BEFORE UPDATE ON sponsorships
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER trg_reviews_updated_at
-  BEFORE UPDATE ON reviews
+CREATE TRIGGER IF NOT EXISTS meetings_updated_at
+  BEFORE UPDATE ON meetings
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER trg_faqs_updated_at
+CREATE TRIGGER IF NOT EXISTS faqs_updated_at
   BEFORE UPDATE ON faqs
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER trg_platform_stats_updated_at
-  BEFORE UPDATE ON platform_stats
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER trg_success_stories_updated_at
-  BEFORE UPDATE ON success_stories
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER trg_transactions_updated_at
-  BEFORE UPDATE ON transactions
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
--- Trigger: auto-create profile on user signup
-CREATE OR REPLACE FUNCTION handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.profiles (id, email, full_name, role)
-  VALUES (
-    NEW.id,
-    NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', 'User'),
-    COALESCE(NEW.raw_user_meta_data->>'role', 'applicant')
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trg_on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
-
--- Trigger: update amount_raised on applications when sponsorship is completed
-CREATE OR REPLACE FUNCTION update_application_amount_raised()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF NEW.status = 'completed' THEN
-    UPDATE applications
-    SET amount_raised = amount_raised + NEW.amount
-    WHERE id = NEW.application_id;
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trg_on_sponsorship_completed
-  AFTER INSERT OR UPDATE OF status ON sponsorships
-  FOR EACH ROW
-  WHEN (NEW.status = 'completed')
-  EXECUTE FUNCTION update_application_amount_raised();
