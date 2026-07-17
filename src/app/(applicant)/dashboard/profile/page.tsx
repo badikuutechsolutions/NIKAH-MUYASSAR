@@ -31,7 +31,7 @@ export default function ProfilePage() {
   const handleSave = async () => {
     setSaving(true)
     const { error } = await supabase.from('profiles').update(form).eq('id', user?.id)
-    if (error) { toast.error('Failed to update profile'); setSaving(false); return }
+    if (error) { console.error('Profile update error:', error); toast.error(error.message); setSaving(false); return }
     toast.success('Profile updated successfully')
     setSaving(false)
   }
