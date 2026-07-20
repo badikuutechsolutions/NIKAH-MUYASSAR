@@ -57,12 +57,12 @@ export default function SponsorDashboard() {
         </CardContent></Card>
         <Card><CardContent className="p-5 text-center">
           <CreditCard className="h-8 w-8 text-primary mx-auto mb-2" />
-          <p className="text-2xl font-bold text-charcoal font-display">${stats.pledged.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-charcoal font-display">KSh ${stats.pledged.toLocaleString()}</p>
           <p className="text-sm text-gray-500">Total Pledged</p>
         </CardContent></Card>
         <Card><CardContent className="p-5 text-center">
           <Users className="h-8 w-8 text-secondary mx-auto mb-2" />
-          <p className="text-2xl font-bold text-charcoal font-display">${stats.paid.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-charcoal font-display">KSh ${stats.paid.toLocaleString()}</p>
           <p className="text-sm text-gray-500">Total Paid</p>
         </CardContent></Card>
       </div>
@@ -97,7 +97,7 @@ export default function SponsorDashboard() {
             {sponsorships.slice(0, 5).map((s: any) => (
               <div key={s.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
-                  <p className="text-sm font-medium text-charcoal">${s.amount_pledged} pledged</p>
+                  <p className="text-sm font-medium text-charcoal">KSh ${s.amount_pledged} pledged</p>
                   <p className="text-xs text-gray-400">{s.currency} &middot; {s.status}</p>
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full ${s.status === 'completed' ? 'bg-green-100 text-green-700' : s.status === 'pledged' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>

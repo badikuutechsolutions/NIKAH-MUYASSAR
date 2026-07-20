@@ -92,7 +92,7 @@ export default function AdminApplicationsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4 text-gray-500">{app.country_of_residence}</td>
-                    <td className="py-3 px-4 font-medium">${app.amount_requested}</td>
+                    <td className="py-3 px-4 font-medium">KSh ${app.amount_requested}</td>
                     <td className="py-3 px-4"><Badge variant="status" status={app.status} size="sm">{app.status}</Badge></td>
                     <td className="py-3 px-4 text-gray-400 text-xs">{formatRelativeDate(app.submitted_at)}</td>
                     <td className="py-3 px-4">

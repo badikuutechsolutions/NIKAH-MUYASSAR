@@ -281,7 +281,7 @@ export default function ApplyPage() {
           {form.hasExistingDebt === 'true' && <Textarea label="Describe your debt" placeholder="Briefly describe your debt situation..." value={form.debtDescription} onChange={(e: any) => update('debtDescription', e.target.value)} />}
           <Input label="Estimated Total Wedding Cost" type="number" placeholder="Total cost needed" value={form.estimatedWeddingCost} onChange={(e) => update('estimatedWeddingCost', e.target.value)} />
           <Input label="Amount You Are Requesting *" type="number" placeholder="Amount you need (e.g., 500)" value={form.amountRequested} onChange={(e) => update('amountRequested', e.target.value)} />
-          <p className="text-xs text-gray-400">Typical requests: $200 - $2,000</p>
+          <p className="text-xs text-gray-400">Typical requests: KSh 200 - KSh 2,000</p>
         </div>
       )
       case 2: return (
@@ -329,7 +329,7 @@ export default function ApplyPage() {
               <div><span className="text-gray-500">Gender:</span> <span className="font-medium capitalize">{form.gender}</span></div>
               <div><span className="text-gray-500">Country:</span> <span className="font-medium">{form.countryOfResidence}</span></div>
               <div><span className="text-gray-500">City:</span> <span className="font-medium">{form.city}</span></div>
-              <div><span className="text-gray-500">Amount Requested:</span> <span className="font-medium">${form.amountRequested}</span></div>
+              <div><span className="text-gray-500">Amount Requested:</span> <span className="font-medium">KSh ${form.amountRequested}</span></div>
               <div><span className="text-gray-500">Mosque:</span> <span className="font-medium">{form.localMosqueName}</span></div>
               <div><span className="text-gray-500">Imam:</span> <span className="font-medium">{form.imamReferenceName}</span></div>
             </div>

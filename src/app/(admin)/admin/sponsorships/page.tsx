@@ -40,7 +40,7 @@ export default function AdminSponsorshipsPage() {
                 <tr key={s.id} className="border-t border-gray-100 hover:bg-gray-50">
                   <td className="py-3 px-4 font-medium text-charcoal">{s.sponsor_id?.slice(0, 8)}...</td>
                   <td className="py-3 px-4 text-gray-500">{s.application_id?.slice(0, 8)}...</td>
-                  <td className="py-3 px-4 font-medium">${s.amount_pledged} {s.currency}</td>
+                  <td className="py-3 px-4 font-medium">KSh ${s.amount_pledged} {s.currency}</td>
                   <td className="py-3 px-4"><Badge variant="status" status={s.status === 'completed' ? 'approved' : s.status === 'pledged' ? 'pending' : 'withdrawn'}>{s.status}</Badge></td>
                   <td className="py-3 px-4 text-xs text-gray-400">{formatDate(s.pledged_at)}</td>
                 </tr>

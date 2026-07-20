@@ -59,7 +59,7 @@ export default function MySponsorshipsPage() {
                       </div>
                       <div>
                         <p className="font-semibold text-charcoal">
-                          ${s.amount_pledged} {s.currency} pledged
+                          KSh ${s.amount_pledged} {s.currency} pledged
                         </p>
                         <p className="text-xs text-gray-400">{formatDate(s.pledged_at)}</p>
                         {s.sponsor_message && <p className="text-xs text-gray-500 mt-1 italic">&ldquo;{s.sponsor_message}&rdquo;</p>}
@@ -69,7 +69,7 @@ export default function MySponsorshipsPage() {
                       <Badge variant="status" status={s.status === 'completed' ? 'approved' : s.status === 'pledged' ? 'under_review' : 'pending'}>
                         {s.status}
                       </Badge>
-                      <p className="text-xs text-gray-400 mt-1">${s.amount_paid} paid</p>
+                      <p className="text-xs text-gray-400 mt-1">KSh ${s.amount_paid} paid</p>
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-2 text-xs text-gray-400">

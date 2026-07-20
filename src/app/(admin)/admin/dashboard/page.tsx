@@ -45,7 +45,7 @@ export default function AdminDashboard() {
     { label: 'Approved', value: stats.approved.toString(), icon: Heart, color: 'bg-green-500' },
     { label: 'Completed (Marriages)', value: stats.completed.toString(), icon: Heart, color: 'bg-emerald-500' },
     { label: 'Total Sponsors', value: stats.total_sponsors.toString(), icon: Users, color: 'bg-purple-500' },
-    { label: 'Funds Raised', value: `$${stats.total_amount_raised.toLocaleString()}`, icon: DollarSign, color: 'bg-secondary' },
+    { label: 'Funds Raised', value: `$KSh ${stats.total_amount_raised.toLocaleString()}`, icon: DollarSign, color: 'bg-secondary' },
   ]
 
   if (loading) return <div className="space-y-4"><Skeleton className="h-32 w-full" /><Skeleton className="h-64 w-full" /></div>
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
                   <tr key={app.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="py-3 px-2 font-medium text-charcoal">{app.display_alias || app.full_name?.split(' ')[0]}</td>
                     <td className="py-3 px-2 text-gray-500">{app.country_of_residence}</td>
-                    <td className="py-3 px-2">${app.amount_requested}</td>
+                    <td className="py-3 px-2">KSh ${app.amount_requested}</td>
                     <td className="py-3 px-2">
                       <Badge variant="status" status={app.status} size="sm">{app.status}</Badge>
                     </td>

@@ -68,8 +68,8 @@ export default function ApplicationDetail() {
               <div className="space-y-2">
                 <div><span className="text-gray-500">Monthly Income:</span> <span className="font-medium">{application.monthly_income ? `$${application.monthly_income}` : 'Not specified'}</span></div>
                 <div><span className="text-gray-500">Employment:</span> <span className="font-medium capitalize">{application.employment_type || 'Not specified'}</span></div>
-                <div><span className="text-gray-500">Amount Requested:</span> <span className="font-bold text-primary">${application.amount_requested}</span></div>
-                <div><span className="text-gray-500">Amount Raised:</span> <span className="font-bold text-green-600">${application.amount_raised}</span></div>
+                <div><span className="text-gray-500">Amount Requested:</span> <span className="font-bold text-primary">KSh ${application.amount_requested}</span></div>
+                <div><span className="text-gray-500">Amount Raised:</span> <span className="font-bold text-green-600">KSh ${application.amount_raised}</span></div>
               </div>
             </div>
             <div className="space-y-3">

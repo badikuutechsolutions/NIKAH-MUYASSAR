@@ -163,8 +163,8 @@ export default function ApplicantDashboard() {
                     <ChevronRight className="h-4 w-4 text-gray-400" />
                   </div>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="text-gray-500">Looking for</span><span className="font-medium">${application.amount_requested}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-500">Raised</span><span className="font-medium text-primary">${application.amount_raised}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Looking for</span><span className="font-medium">KSh ${application.amount_requested}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Raised</span><span className="font-medium text-primary">KSh ${application.amount_raised}</span></div>
                     <div className="flex justify-between"><span className="text-gray-500">Country</span><span className="font-medium">{getCountryFlag(application.country_of_residence)} {application.country_of_residence}</span></div>
                     <div className="flex justify-between"><span className="text-gray-500">Submitted</span><span className="font-medium">{formatRelativeDate(application.submitted_at)}</span></div>
                   </div>

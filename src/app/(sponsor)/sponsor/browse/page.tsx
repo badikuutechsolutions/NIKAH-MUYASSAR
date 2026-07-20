@@ -137,8 +137,8 @@ export default function SponsorBrowsePage() {
 
                     <div className="space-y-2 mb-3">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Goal: ${app.amount_requested}</span>
-                        <span className="text-primary font-semibold">Raised: ${app.amount_raised}</span>
+                        <span className="text-gray-500">Goal: KSh ${app.amount_requested}</span>
+                        <span className="text-primary font-semibold">Raised: KSh ${app.amount_raised}</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                         <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${percentage}%` }} />
