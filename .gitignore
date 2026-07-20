@@ -28,6 +28,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# capacitor / mobile
+android/.gradle
+android/app/build
+android/build
+ios/App/Pods
+ios/App/App.xcworkspace
+ios/App/Podfile.lock
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
