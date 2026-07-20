@@ -25,13 +25,10 @@ jobs:
       - name: Build Next.js app
         run: npm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
-          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: placeholder
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'placeholder' }}
           NEXT_PUBLIC_APP_URL: https://nikah-muyassar.vercel.app
-
-      - name: Copy web build to Android
-        run: npx cap copy android
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -42,8 +39,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build APK
+      - name: Sync Capacitor and build
         run: |
+          npx cap sync android
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
