@@ -31,7 +31,7 @@ export default function LoginPage() {
 
     toast.success('Welcome back!')
     const { data: { user } } = await supabase.auth.getUser()
-    const role = user?.app_metadata?.role || 'applicant'
+    const role = user?.app_metadata?.role || user?.user_metadata?.role || 'applicant'
     const redirects: Record<string, string> = { applicant: '/dashboard', sponsor: '/sponsor/dashboard', admin: '/admin/dashboard', reviewer: '/admin/dashboard' }
     router.push(redirects[role] || '/')
   }
