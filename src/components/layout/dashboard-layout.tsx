@@ -48,6 +48,7 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
     { href: '/admin/success-stories', label: 'Success Stories', icon: Award },
     { href: '/admin/faqs', label: 'FAQs', icon: BookOpen },
     { href: '/admin/contact-messages', label: 'Messages', icon: MessageSquare },
+    { href: '/admin/notifications', label: 'Notifications', icon: Bell },
     { href: '/admin/settings', label: 'Settings', icon: Settings },
   ]
 

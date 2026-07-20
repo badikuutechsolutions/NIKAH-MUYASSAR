@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Bell, User, LogOut, Heart, LayoutDashboard, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { useUser } from '@/lib/hooks'
+import { useUser, useNotifications } from '@/lib/hooks'
 
 const publicLinks = [
   { href: '/', label: 'Home' },
@@ -23,6 +23,7 @@ export function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
   const { user, profile, loading } = useUser()
+  const { unreadCount } = useNotifications(user?.id)
 
   const getDashboardLink = () => {
     if (!profile) return '/dashboard'
@@ -104,8 +105,19 @@ export function Navbar() {
                           <p className="text-sm font-medium text-charcoal truncate">{profile?.full_name}</p>
                           <p className="text-xs text-gray-500 capitalize">{profile?.role}</p>
                         </div>
-                        <Link href="/notifications" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-light-teal transition-colors">
-                          <Bell className="h-4 w-4" /> Notifications
+                        <Link
+                          href={profile?.role === 'applicant' ? '/dashboard/notifications' : profile?.role === 'sponsor' ? '/sponsor/notifications' : '/admin/notifications'}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-light-teal transition-colors"
+                        >
+                          <div className="relative">
+                            <Bell className="h-4 w-4" />
+                            {unreadCount > 0 && (
+                              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                                {unreadCount > 9 ? '9+' : unreadCount}
+                              </span>
+                            )}
+                          </div>
+                          Notifications
                         </Link>
                         <Link href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-light-teal transition-colors">
                           <User className="h-4 w-4" /> Profile Settings

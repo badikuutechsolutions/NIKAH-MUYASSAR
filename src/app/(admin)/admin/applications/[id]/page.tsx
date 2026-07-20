@@ -33,11 +33,32 @@ export default function AdminApplicationDetail({ params }: { params: { id: strin
   }, [params.id])
 
   const handleSave = async () => {
-      const { error } = await supabase
-        .from('applications')
-        .update({ status, reviewer_notes: reviewerNotes, reviewed_at: new Date().toISOString() })
-        .eq('id', params.id)
+    const { error } = await supabase
+      .from('applications')
+      .update({ status, reviewer_notes: reviewerNotes, reviewed_at: new Date().toISOString() })
+      .eq('id', params.id)
     if (error) { toast.error('Failed to update'); return }
+
+    // Notify applicant of status change
+    const statusMessages: Record<string, string> = {
+      under_review: 'Your application is now under review. We will update you soon.',
+      approved: 'Alhamdulillah! Your application has been approved and is now visible to sponsors.',
+      rejected: 'Your application was not approved at this time. Please contact support for details.',
+      info_requested: 'Additional information is needed for your application. Please log in to provide more details.',
+      fully_funded: 'Congratulations! Your wedding costs have been fully funded!',
+      completed: 'Your case has been marked as completed. May Allah bless your marriage!',
+    }
+    const message = statusMessages[status]
+    if (message && application?.applicant_id) {
+      await supabase.from('notifications').insert({
+        user_id: application.applicant_id,
+        type: status === 'approved' ? 'application_approved' : status === 'rejected' ? 'application_rejected' : 'application_under_review',
+        title: `Application ${status.replace('_', ' ')}`,
+        message,
+        link: '/dashboard/application',
+      })
+    }
+
     toast.success('Application updated')
     router.refresh()
   }

@@ -30,5 +30,18 @@ export async function POST(request: Request) {
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  // Notify the applicant about the meeting
+  if (body.applicant_id) {
+    await supabase.from('notifications').insert({
+      user_id: body.applicant_id,
+      type: 'meeting_scheduled',
+      title: 'Meeting Scheduled',
+      message: `A ${body.meeting_type} meeting has been scheduled for ${new Date(body.meeting_date).toLocaleDateString()} at ${new Date(body.meeting_date).toLocaleTimeString()}.`,
+      link: '/dashboard/meetings',
+      metadata: { meeting_id: data?.id },
+    })
+  }
+
   return NextResponse.json(data, { status: 201 })
 }

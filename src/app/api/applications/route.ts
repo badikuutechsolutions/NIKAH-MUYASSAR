@@ -48,5 +48,31 @@ export async function POST(request: Request) {
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  // Notify applicant
+  await supabase.from('notifications').insert({
+    user_id: session.user.id,
+    type: 'application_submitted',
+    title: 'Application Received',
+    message: 'Your application has been submitted successfully. Our team will review it within 3-7 business days.',
+    link: '/dashboard/application',
+  })
+
+  // Notify all admins
+  const { data: admins } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('role', 'admin')
+  if (admins) {
+    const adminNotifs = admins.map((a: any) => ({
+      user_id: a.id,
+      type: 'new_application' as const,
+      title: 'New Application Submitted',
+      message: `${body.full_name} from ${body.country_of_residence} has submitted an application requesting KSh ${body.amount_requested}.`,
+      link: `/admin/applications/${data?.id}`,
+    }))
+    await supabase.from('notifications').insert(adminNotifs)
+  }
+
   return NextResponse.json(data, { status: 201 })
 }
