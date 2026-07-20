@@ -14,8 +14,8 @@ export function Footer() {
             {/* Column 1: Brand */}
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">NM</span>
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <img src="/nikah-muyassar.png" alt="NM" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="font-display text-lg font-bold">{BRAND.name}</h3>

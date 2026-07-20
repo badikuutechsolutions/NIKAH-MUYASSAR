@@ -42,8 +42,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-white text-xs font-bold">NM</span>
+            <div className="w-8 h-8 rounded-full overflow-hidden">
+              <img src="/nikah-muyassar.png" alt="NM" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="font-display text-lg font-bold text-charcoal hidden sm:block">Nikah Muyassar</span>

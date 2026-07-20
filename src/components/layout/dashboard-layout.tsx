@@ -67,8 +67,8 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
       >
         <div className={cn('flex items-center h-16 px-4 border-b border-white/10', !sidebarOpen && 'lg:justify-center')}>
           <Link href="/" className={cn('flex items-center gap-2', !sidebarOpen && 'lg:hidden')}>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0">
-              <span className="text-white text-xs font-bold">NM</span>
+            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
+              <img src="/nikah-muyassar.png" alt="NM" className="w-full h-full object-cover" />
             </div>
             {sidebarOpen && (
               <div>
