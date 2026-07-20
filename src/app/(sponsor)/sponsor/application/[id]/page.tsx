@@ -37,7 +37,6 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
         .from('applications')
         .select('*')
         .eq('id', params.id)
-        .in('status', ['approved', 'sponsored', 'partially_funded'])
         .single()
       setApplication(data)
       setLoading(false)
