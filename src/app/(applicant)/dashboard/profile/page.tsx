@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { User, Mail, Phone, MapPin, Save } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Save, Camera, Upload, Check, Loader2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,10 @@ import { toast } from 'sonner'
 export default function ProfilePage() {
   const { user, profile, loading } = useUser()
   const [form, setForm] = useState({ full_name: '', phone: '', whatsapp: '', country: '', city: '', bio: '' })
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (profile) {
@@ -25,12 +28,44 @@ export default function ProfilePage() {
         city: profile.city || '',
         bio: profile.bio || '',
       })
+      setProfilePhoto(profile.profile_photo || null)
     }
   }, [profile])
 
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
+      toast.error('Please upload a JPG or PNG image')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Image must be less than 2MB')
+      return
+    }
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('folder', `profiles/${user?.id}`)
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (!res.ok) throw new Error('Upload failed')
+      const data = await res.json()
+      setProfilePhoto(data.secure_url)
+      toast.success('Photo uploaded')
+    } catch {
+      toast.error('Failed to upload photo')
+    }
+    setUploading(false)
+  }
+
   const handleSave = async () => {
     setSaving(true)
-    const { error } = await supabase.from('profiles').update(form).eq('id', user?.id)
+    const updateData = { ...form }
+    if (profilePhoto) updateData.profile_photo = profilePhoto
+    const { error } = await supabase.from('profiles').update(updateData).eq('id', user?.id)
     if (error) { console.error('Profile update error:', error); toast.error(error.message); setSaving(false); return }
     toast.success('Profile updated successfully')
     setSaving(false)
@@ -43,13 +78,34 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-display font-bold text-charcoal mb-6">Profile Settings</h1>
       <Card>
         <CardContent className="p-6 space-y-4">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-white text-xl font-bold">
-                {form.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
-              </span>
+          {/* Profile Photo */}
+          <div className="flex flex-col items-center gap-3 mb-6">
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden">
+                {profilePhoto ? (
+                  <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-white text-3xl font-bold">
+                    {form.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center shadow-md hover:bg-secondary-dark transition-colors"
+              >
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={handlePhotoUpload}
+              />
             </div>
-            <div>
+            <div className="text-center">
               <h2 className="text-lg font-semibold text-charcoal">{form.full_name}</h2>
               <p className="text-sm text-gray-500 capitalize">{profile?.role}</p>
             </div>

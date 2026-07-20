@@ -31,7 +31,7 @@ interface FormData {
 
 const INITIAL_FORM: FormData = {
   fullName: '', age: '', gender: '', maritalStatus: 'single', nationality: '', countryOfResidence: '', city: '', occupation: '', phone: '', whatsapp: '',
-  hasEmployment: 'false', employmentType: '', monthlyIncome: '', incomeCurrency: 'USD', financialHardshipDesc: '', hasExistingDebt: 'false', debtDescription: '', estimatedWeddingCost: '', amountRequested: '',
+  hasEmployment: 'false', employmentType: '', monthlyIncome: '', incomeCurrency: 'KES', financialHardshipDesc: '', hasExistingDebt: 'false', debtDescription: '', estimatedWeddingCost: '', amountRequested: '',
   religiosityLevel: '', isAlreadyEngaged: 'false', partnerName: '', partnerNationality: '', howTheyMet: '', localMosqueName: '', localMosqueCity: '', imamReferenceName: '', imamContact: '', reasonForMarriage: '',
   idDocumentUrl: '', incomeProofUrl: '', imamLetterUrl: '', profilePhotoUrl: '', additionalDocs: [],
   isAnonymous: false, displayAlias: '', consentToShareStory: false,

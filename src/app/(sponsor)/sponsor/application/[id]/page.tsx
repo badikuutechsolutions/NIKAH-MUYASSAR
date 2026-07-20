@@ -25,7 +25,7 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
   const [loading, setLoading] = useState(true)
   const [showPledge, setShowPledge] = useState(false)
   const [pledgeAmount, setPledgeAmount] = useState('')
-  const [pledgeCurrency, setPledgeCurrency] = useState('USD')
+  const [pledgeCurrency, setPledgeCurrency] = useState('KES')
   const [pledgeMessage, setPledgeMessage] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [isZakat, setIsZakat] = useState(false)

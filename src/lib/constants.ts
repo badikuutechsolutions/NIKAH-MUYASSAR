@@ -2,7 +2,8 @@ export const BRAND = {
   name: 'Nikah Muyassar',
   nameAr: 'نكاح ميسر',
   tagline: 'Because every righteous soul deserves to complete half their Deen',
-  description: 'A faith-driven digital platform that connects financially struggling Muslims who wish to marry with generous sponsors who fund their weddings.',
+  slogan: 'Tende na Maji Adui ni Zina',
+  description: 'A faith-driven digital platform connecting Kenyan Muslims with sponsors to facilitate marriage — because financial barriers should never stand between you and completing half your Deen.',
   email: 'hamoudybadi@gmail.com',
   supportEmail: 'hamoudybadi@gmail.com',
   phone: '+254742773562',
@@ -173,35 +174,37 @@ export const DUA_FOR_MARRIAGE = {
 }
 
 export const COUNTRIES = [
-  'Afghanistan', 'Algeria', 'Bahrain', 'Bangladesh', 'Egypt', 'Indonesia', 'Iran', 'Iraq', 'Jordan',
-  'Kuwait', 'Lebanon', 'Libya', 'Malaysia', 'Maldives', 'Mali', 'Mauritania', 'Morocco', 'Niger',
-  'Nigeria', 'Oman', 'Pakistan', 'Palestine', 'Qatar', 'Saudi Arabia', 'Senegal', 'Somalia',
-  'Sudan', 'Syria', 'Tajikistan', 'Tunisia', 'Turkey', 'Turkmenistan', 'UAE', 'Uganda', 'UK',
-  'USA', 'Uzbekistan', 'Yemen',
-  'Canada', 'France', 'Germany', 'Netherlands', 'Australia', 'India', 'Kenya', 'Tanzania',
-  'South Africa', 'Sierra Leone', 'Ethiopia', 'Albania', 'Bosnia', 'Kosovo', 'China',
-  'Thailand', 'Singapore', 'Philippines', 'Myanmar',
-].sort()
+  'Kenya', 'Tanzania', 'Uganda', 'Rwanda', 'Burundi', 'South Sudan', 'Ethiopia', 'Somalia',
+  'Sudan', 'Egypt', 'Nigeria', 'South Africa', 'Ghana', 'Senegal', 'Mali', 'Niger',
+  'Algeria', 'Morocco', 'Tunisia', 'Libya', 'Mauritania', 'Sierra Leone', 'Gambia',
+  'Afghanistan', 'Bahrain', 'Bangladesh', 'Indonesia', 'Iran', 'Iraq', 'Jordan',
+  'Kuwait', 'Lebanon', 'Malaysia', 'Maldives', 'Oman', 'Pakistan', 'Palestine',
+  'Qatar', 'Saudi Arabia', 'Syria', 'Tajikistan', 'Turkey', 'Turkmenistan', 'UAE',
+  'Uzbekistan', 'Yemen', 'UK', 'USA', 'Canada', 'France', 'Germany', 'Netherlands',
+  'Australia', 'India', 'China', 'Thailand', 'Singapore', 'Philippines', 'Myanmar',
+  'Albania', 'Bosnia', 'Kosovo',
+].sort(function(a, b) {
+  if (a === 'Kenya') return -1;
+  if (b === 'Kenya') return 1;
+  return a.localeCompare(b);
+})
 
 export const CURRENCIES = [
+  { code: 'KES', symbol: 'KSh', name: 'Kenyan Shilling' },
   { code: 'USD', symbol: '$', name: 'US Dollar' },
   { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'GBP', symbol: '£', name: 'British Pound' },
-  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
-  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+  { code: 'TZS', symbol: 'TSh', name: 'Tanzanian Shilling' },
+  { code: 'UGX', symbol: 'USh', name: 'Ugandan Shilling' },
   { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
   { code: 'SAR', symbol: '﷼', name: 'Saudi Riyal' },
+  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
   { code: 'QAR', symbol: '﷼', name: 'Qatari Riyal' },
   { code: 'KWD', symbol: 'د.ك', name: 'Kuwaiti Dinar' },
   { code: 'OMR', symbol: '﷼', name: 'Omani Rial' },
   { code: 'BHD', symbol: '.د.ب', name: 'Bahraini Dinar' },
   { code: 'EGP', symbol: '£', name: 'Egyptian Pound' },
-  { code: 'PKR', symbol: '₨', name: 'Pakistani Rupee' },
-  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
-  { code: 'IDR', symbol: 'Rp', name: 'Indonesian Rupiah' },
-  { code: 'MYR', symbol: 'RM', name: 'Malaysian Ringgit' },
-  { code: 'TRY', symbol: '₺', name: 'Turkish Lira' },
   { code: 'NGN', symbol: '₦', name: 'Nigerian Naira' },
-  { code: 'BDT', symbol: '৳', name: 'Bangladeshi Taka' },
-  { code: 'MAD', symbol: 'د.م.', name: 'Moroccan Dirham' },
+  { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
 ]
