@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
   const body = await request.json()
 
-  // Start a transaction-like flow
+  // Create sponsorship record
   const { data: sponsorship, error: spError } = await supabase
     .from('sponsorships')
     .insert({ ...body, sponsor_id: session.user.id })
@@ -43,17 +43,46 @@ export async function POST(request: Request) {
 
   if (spError) return NextResponse.json({ error: spError.message }, { status: 500 })
 
-  // Update the application's amount_raised
-  await supabase.rpc('update_application_amount_raised', { app_id: body.application_id })
+  // Look up the applicant's user ID for this application
+  const { data: application } = await supabase
+    .from('applications')
+    .select('applicant_id, amount_raised, amount_requested')
+    .eq('id', body.application_id)
+    .single()
 
-  // Create a notification for the applicant
-  await supabase.from('notifications').insert({
-    user_id: body.application_id, // This would need the applicant_id lookup
-    type: 'sponsorship_received',
-    title: 'New Sponsorship Received!',
-    message: `A generous sponsor has pledged $${body.amount_pledged} toward your wedding.`,
-    metadata: { sponsorship_id: sponsorship.id, amount: body.amount_pledged },
-  })
+  if (application) {
+    // Update amount_raised directly
+    const newRaised = Number(application.amount_raised) + Number(body.amount_pledged)
+    await supabase
+      .from('applications')
+      .update({ amount_raised: newRaised })
+      .eq('id', body.application_id)
 
-  return NextResponse.json(sponsorship, { status: 201 })
+    // Update status if fully funded
+    if (newRaised >= Number(application.amount_requested)) {
+      await supabase
+        .from('applications')
+        .update({ status: 'fully_funded' })
+        .eq('id', body.application_id)
+    } else {
+      await supabase
+        .from('applications')
+        .update({ status: 'partially_funded', sponsor_id: session.user.id })
+        .eq('id', body.application_id)
+    }
+
+    // Create notification for the applicant
+    await supabase.from('notifications').insert({
+      user_id: application.applicant_id,
+      type: 'sponsorship_received',
+      title: 'New Sponsorship Received!',
+      message: `A generous sponsor has pledged KSh ${body.amount_pledged} toward your wedding.`,
+      metadata: { sponsorship_id: sponsorship.id, amount: body.amount_pledged, sponsor_id: session.user.id },
+    })
+  }
+
+  return NextResponse.json({
+    ...sponsorship,
+    payment_instructions: 'Thank you for your pledge! Please make your payment via M-Pesa to +254742773562 (Hamoudy Badi) and send the confirmation message to the same number. Your pledge will be confirmed once payment is received.',
+  }, { status: 201 })
 }

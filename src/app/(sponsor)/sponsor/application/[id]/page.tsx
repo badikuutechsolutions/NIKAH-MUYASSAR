@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Heart, DollarSign, Lock, Check } from 'lucide-react'
+import { ArrowLeft, Heart, DollarSign, Lock, Check, Phone, Copy } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -30,6 +30,7 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [isZakat, setIsZakat] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [pledgeSuccess, setPledgeSuccess] = useState<any>(null)
 
   useEffect(() => {
     const fetchApp = async () => {
@@ -61,9 +62,9 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
         }),
       })
       if (!res.ok) throw new Error('Failed to create pledge')
-      toast.success('Pledge created! Jazakallah Khair!')
+      const pledge = await res.json()
+      setPledgeSuccess(pledge)
       setShowPledge(false)
-      router.refresh()
     } catch (err: any) {
       toast.error(err.message || 'Failed to create pledge')
     }
@@ -133,6 +134,39 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
         </CardContent>
       </Card>
 
+      {/* Pledge Success - Payment Instructions */}
+      {pledgeSuccess && (
+        <Card className="border-secondary/30 bg-gradient-to-br from-gold-light to-white">
+          <CardContent className="p-6 text-center">
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+              <Check className="h-8 w-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-display font-bold text-charcoal mb-2">Jazakallah Khair!</h2>
+            <p className="text-gray-600 mb-4">Your pledge of <strong>KSh {pledgeSuccess.amount_pledged}</strong> has been recorded.</p>
+            <div className="bg-white rounded-xl p-5 text-left space-y-3 border border-gray-200 mb-4">
+              <h3 className="font-semibold text-charcoal text-center">Next Steps — Make Your Payment</h3>
+              <div className="flex items-center gap-3 p-3 bg-light-teal rounded-lg">
+                <Phone className="h-5 w-5 text-primary shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-charcoal">Send via M-Pesa to:</p>
+                  <p className="text-lg font-bold text-primary">+254 742 773 562</p>
+                  <p className="text-xs text-gray-500">Hamoudy Badi</p>
+                </div>
+                <button onClick={() => { navigator.clipboard.writeText('254742773562'); toast.success('Number copied!') }} className="ml-auto p-2 rounded-lg hover:bg-gray-100">
+                  <Copy className="h-4 w-4 text-gray-400" />
+                </button>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                <p>After sending, forward the M-Pesa confirmation message to <strong>+254 742 773 562</strong> via WhatsApp or SMS. Your pledge will be confirmed by our team within 24 hours.</p>
+              </div>
+            </div>
+            <Link href="/sponsor/my-sponsorships">
+              <Button variant="primary">View My Sponsorships</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Pledge Modal */}
       <Modal isOpen={showPledge} onClose={() => setShowPledge(false)} title="Make a Sponsorship Pledge" size="md">
         <div className="p-6 space-y-4">
@@ -152,7 +186,7 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
             </label>
           </div>
           <Button variant="secondary" className="w-full" onClick={handlePledge} loading={submitting} icon={<Heart className="h-4 w-4" />}>
-            Confirm Pledge — ${pledgeAmount || '0'} {pledgeCurrency}
+            Confirm Pledge — KSh {pledgeAmount || '0'} {pledgeCurrency}
           </Button>
         </div>
       </Modal>
