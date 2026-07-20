@@ -30,7 +30,7 @@ export default function SponsorBrowsePage() {
       let query = supabase
         .from('applications')
         .select('*')
-        .in('status', ['approved', 'sponsored', 'partially_funded'])
+        .in('status', ['pending', 'under_review', 'approved', 'sponsored', 'partially_funded', 'fully_funded'])
         .order('submitted_at', { ascending: false })
 
       if (countryFilter) query = query.eq('country_of_residence', countryFilter)
