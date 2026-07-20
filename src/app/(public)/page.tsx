@@ -105,19 +105,10 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-charcoal leading-tight mb-3"
           >
-            Connecting Hearts,
+            Tende na Maji
             <br />
-            <span className="text-primary">Fulfilling Dreams</span>
+            <span className="text-primary">Adui ni Zinaa</span>
           </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="text-lg md:text-xl text-secondary-dark font-arabic font-bold mb-2"
-          >
-            &#x201C;Tende na Maji Adui ni Zina&#x201D;
-          </motion.p>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
