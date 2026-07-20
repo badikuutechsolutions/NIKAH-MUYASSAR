@@ -12,9 +12,10 @@ export async function GET(request: Request) {
   }
 
   const { data: { user } } = await (await createRouteHandlerClient({ cookies })).auth.getUser()
-  const role = user?.app_metadata?.role
+  // Check both app_metadata and user_metadata (email registration stores role in user_metadata)
+  const role = user?.app_metadata?.role || user?.user_metadata?.role
 
-  // New Google users don't have a role yet — send them to choose
+  // New Google/SSO users don't have a role yet — send them to choose
   if (!role) {
     return NextResponse.redirect(new URL('/choose-role', requestUrl.origin))
   }
