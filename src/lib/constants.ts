@@ -4,9 +4,10 @@ export const BRAND = {
   tagline: 'Because every righteous soul deserves to complete half their Deen',
   slogan: 'Tende na Maji Adui ni Zina',
   description: 'A faith-driven digital platform connecting Kenyan Muslims with sponsors to facilitate marriage — because financial barriers should never stand between you and completing half your Deen.',
-  email: 'hamoudybadi@gmail.com',
-  supportEmail: 'hamoudybadi@gmail.com',
-  phone: '+254742773562',
+  email: 'tendenamaji@gmail.com',
+  supportEmail: 'alidumbo79@gmail.com',
+  phone: '+254701881929',
+  phone2: '+254726903363',
   social: {
     instagram: 'https://instagram.com/nikahmuyassar',
     twitter: 'https://twitter.com/nikahmuyassar',
