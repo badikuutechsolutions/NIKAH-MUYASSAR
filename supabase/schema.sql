@@ -32,7 +32,7 @@ CREATE POLICY IF NOT EXISTS "users_own_profile" ON profiles
 
 CREATE POLICY IF NOT EXISTS "admin_all_profiles" ON profiles
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') IN ('admin', 'reviewer')
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') IN ('admin', 'reviewer')
   );
 
 -- 2. APPLICATIONS
@@ -106,12 +106,12 @@ CREATE POLICY IF NOT EXISTS "applicant_own_applications" ON applications
 CREATE POLICY IF NOT EXISTS "sponsor_view_approved" ON applications
   FOR SELECT USING (
     status IN ('approved', 'sponsored', 'partially_funded') AND
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'sponsor'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'sponsor'
   );
 
 CREATE POLICY IF NOT EXISTS "admin_reviewer_all_applications" ON applications
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') IN ('admin', 'reviewer')
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') IN ('admin', 'reviewer')
   );
 
 -- 3. SPONSORSHIPS
@@ -150,7 +150,7 @@ CREATE POLICY IF NOT EXISTS "applicant_view_own_sponsorships" ON sponsorships
 
 CREATE POLICY IF NOT EXISTS "admin_all_sponsorships" ON sponsorships
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- 4. NOTIFICATIONS
@@ -209,7 +209,7 @@ CREATE POLICY IF NOT EXISTS "reviewer_assigned_meetings" ON meetings
 
 CREATE POLICY IF NOT EXISTS "admin_all_meetings" ON meetings
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- 6. SUCCESS_STORIES
@@ -239,7 +239,7 @@ CREATE POLICY IF NOT EXISTS "public_read_published_stories" ON success_stories
 
 CREATE POLICY IF NOT EXISTS "admin_manage_stories" ON success_stories
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- 7. FAQS
@@ -261,7 +261,7 @@ CREATE POLICY IF NOT EXISTS "public_read_active_faqs" ON faqs
 
 CREATE POLICY IF NOT EXISTS "admin_manage_faqs" ON faqs
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- 8. CONTACT_MESSAGES
@@ -286,7 +286,7 @@ CREATE POLICY IF NOT EXISTS "anyone_can_insert_contact" ON contact_messages
 
 CREATE POLICY IF NOT EXISTS "admin_manage_contacts" ON contact_messages
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- 9. PLATFORM_STATS
@@ -310,7 +310,7 @@ CREATE POLICY IF NOT EXISTS "public_read_platform_stats" ON platform_stats
 
 CREATE POLICY IF NOT EXISTS "admin_update_platform_stats" ON platform_stats
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- TRIGGERS
@@ -341,3 +341,4 @@ CREATE TRIGGER IF NOT EXISTS meetings_updated_at
 CREATE TRIGGER IF NOT EXISTS faqs_updated_at
   BEFORE UPDATE ON faqs
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+

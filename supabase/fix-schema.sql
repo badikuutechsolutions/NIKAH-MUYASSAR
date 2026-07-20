@@ -149,12 +149,12 @@ CREATE POLICY "applicant_own_applications" ON applications
 CREATE POLICY "sponsor_view_approved" ON applications
   FOR SELECT USING (
     status IN ('approved', 'sponsored', 'partially_funded') AND
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'sponsor'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'sponsor'
   );
 
 CREATE POLICY "admin_reviewer_all_applications" ON applications
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') IN ('admin', 'reviewer')
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') IN ('admin', 'reviewer')
   );
 
 -- =============================================
@@ -195,7 +195,7 @@ CREATE POLICY "applicant_view_own_sponsorships" ON sponsorships
 
 CREATE POLICY "admin_all_sponsorships" ON sponsorships
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- =============================================
@@ -258,7 +258,7 @@ CREATE POLICY "reviewer_assigned_meetings" ON meetings
 
 CREATE POLICY "admin_all_meetings" ON meetings
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- =============================================
@@ -290,7 +290,7 @@ CREATE POLICY "public_read_published_stories" ON success_stories
 
 CREATE POLICY "admin_manage_stories" ON success_stories
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- =============================================
@@ -314,7 +314,7 @@ CREATE POLICY "public_read_active_faqs" ON faqs
 
 CREATE POLICY "admin_manage_faqs" ON faqs
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- =============================================
@@ -341,7 +341,7 @@ CREATE POLICY "anyone_can_insert_contact" ON contact_messages
 
 CREATE POLICY "admin_manage_contacts" ON contact_messages
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- =============================================
@@ -367,7 +367,7 @@ CREATE POLICY "public_read_platform_stats" ON platform_stats
 
 CREATE POLICY "admin_update_platform_stats" ON platform_stats
   FOR ALL USING (
-    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    ((auth.jwt() -> 'app_metadata' || auth.jwt() -> 'user_metadata') ->> 'role') = 'admin'
   );
 
 -- =============================================
@@ -405,3 +405,4 @@ DROP TRIGGER IF EXISTS faqs_updated_at ON faqs;
 CREATE TRIGGER faqs_updated_at
   BEFORE UPDATE ON faqs
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
