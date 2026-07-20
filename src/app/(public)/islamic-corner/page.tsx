@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -52,7 +52,7 @@ export default function IslamicCornerPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <ArabicText text={verse.arabic} size="lg" className="text-right mb-2" />
-                      <p className="text-sm text-gray-600 italic">&ldquo;{verse.translation}&rdquo;</p>
+                      <p className="text-sm text-gray-600 italic">"{verse.translation}"</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Badge variant="default" size="sm">{verse.surah} {verse.verse}</Badge>
                       </div>
@@ -83,7 +83,7 @@ export default function IslamicCornerPage() {
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-gray-700 font-quote italic leading-relaxed">&ldquo;{hadith.text}&rdquo;</p>
+                      <p className="text-gray-700 font-quote italic leading-relaxed">"{hadith.text}"</p>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         {hadith.narrator && <Badge variant="default" size="sm">{hadith.narrator}</Badge>}
                         <Badge variant="status" size="sm">{hadith.source}</Badge>
@@ -107,7 +107,7 @@ export default function IslamicCornerPage() {
             <CardContent className="p-8 text-center">
               <ArabicText text={DUA_FOR_MARRIAGE.arabic} size="xl" className="text-center mb-4 leading-loose" />
               <p className="text-sm text-gray-500 italic mb-1">{DUA_FOR_MARRIAGE.transliteration}</p>
-              <p className="text-gray-600 font-quote italic mb-2">&ldquo;{DUA_FOR_MARRIAGE.translation}&rdquo;</p>
+              <p className="text-gray-600 font-quote italic mb-2">"{DUA_FOR_MARRIAGE.translation}"</p>
               <p className="text-xs text-primary font-semibold">{DUA_FOR_MARRIAGE.reference}</p>
             </CardContent>
           </Card>

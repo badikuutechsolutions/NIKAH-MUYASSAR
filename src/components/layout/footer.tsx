@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { Heart, Mail, MapPin, Instagram, Twitter, Facebook } from 'lucide-react'
@@ -123,7 +123,7 @@ export function Footer() {
         <div className="border-t border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <p className="text-center text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()} Nikah Muyassar — Powered by <a href="https://badikuutechsolutions.com" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline">Badikuu Tech Solutions</a>
+              © {new Date().getFullYear()} Nikah Muyassar — Powered by <a href="https://badikuutechsolutions.com" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline">Badikuu Tech Solutions</a>
             </p>
             <p className="text-center text-gray-500 text-xs mt-1 font-arabic">
               وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ

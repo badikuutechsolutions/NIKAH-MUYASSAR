@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -49,7 +49,7 @@ export default function ContactPage() {
           Get in <span className="text-primary">Touch</span>
         </h1>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-          Have a question, suggestion, or want to partner with us? We&apos;d love to hear from you.
+          Have a question, suggestion, or want to partner with us? We'd love to hear from you.
         </p>
       </div>
 

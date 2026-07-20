@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -35,7 +35,7 @@ export default function ApplicationDetail() {
   if (loading) return <div className="space-y-4"><Skeleton className="h-64 w-full" /></div>
   if (!application) return (
     <div className="text-center py-12">
-      <p className="text-gray-500 mb-4">You haven&apos;t submitted an application yet.</p>
+      <p className="text-gray-500 mb-4">You haven't submitted an application yet.</p>
       <Link href="/apply"><Button variant="primary">Apply Now</Button></Link>
     </div>
   )

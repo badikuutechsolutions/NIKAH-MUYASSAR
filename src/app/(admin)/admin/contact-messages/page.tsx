@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { Mail, CheckCircle, Trash2, Send } from 'lucide-react'
@@ -79,7 +79,7 @@ export default function AdminContactMessagesPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-display font-bold text-charcoal">Contact Messages</h1>
-          <p className="text-sm text-gray-500">{messages.length} total &middot; {unresolved} unresolved</p>
+          <p className="text-sm text-gray-500">{messages.length} total · {unresolved} unresolved</p>
         </div>
       </div>
 

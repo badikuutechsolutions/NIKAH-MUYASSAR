@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
@@ -19,10 +19,10 @@ export default function AboutPage() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="prose max-w-none">
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
-            Nikah Muyassar (نكاح ميسر) means &ldquo;The Facilitated Marriage.&rdquo; We are a faith-driven digital platform that connects financially struggling Muslims who wish to marry with generous sponsors who fund their weddings.
+            Nikah Muyassar (نكاح ميسر) means "The Facilitated Marriage." We are a faith-driven digital platform that connects financially struggling Muslims who wish to marry with generous sponsors who fund their weddings.
           </p>
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
-            Inspired by the Quranic promise in Surah An-Nur 24:32 and the Prophetic teaching to &ldquo;make things easy,&rdquo; we believe that financial barriers should never prevent a righteous soul from completing half their Deen.
+            Inspired by the Quranic promise in Surah An-Nur 24:32 and the Prophetic teaching to "make things easy," we believe that financial barriers should never prevent a righteous soul from completing half their Deen.
           </p>
         </motion.div>
 

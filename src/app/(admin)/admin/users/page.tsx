@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { Search, Shield, ShieldAlert, User, Heart, Eye, ChevronDown } from 'lucide-react'
@@ -80,7 +80,7 @@ export default function AdminUsersPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-display font-bold text-charcoal">Users</h1>
-          <p className="text-sm text-gray-500">{users.length} total &middot; {adminCount} admin</p>
+          <p className="text-sm text-gray-500">{users.length} total · {adminCount} admin</p>
         </div>
       </div>
       <div className="mb-4"><Input type="text" placeholder="Search by name, email, or country..." icon={<Search className="h-4 w-4" />} value={search} onChange={(e) => setSearch(e.target.value)} /></div>

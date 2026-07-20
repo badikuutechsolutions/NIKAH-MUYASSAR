@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -98,7 +98,7 @@ export default function SponsorDashboard() {
               <div key={s.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
                   <p className="text-sm font-medium text-charcoal">KSh ${s.amount_pledged} pledged</p>
-                  <p className="text-xs text-gray-400">{s.currency} &middot; {s.status}</p>
+                  <p className="text-xs text-gray-400">{s.currency} · {s.status}</p>
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full ${s.status === 'completed' ? 'bg-green-100 text-green-700' : s.status === 'pledged' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
                   {s.status}

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -90,7 +90,7 @@ export default function ApplicantDashboard() {
         <h1 className="text-2xl font-display font-bold text-charcoal">
           Assalamu Alaikum, {profile?.full_name?.split(' ')[0] || 'User'}
         </h1>
-        <p className="text-gray-500">Here&apos;s your application overview</p>
+        <p className="text-gray-500">Here's your application overview</p>
       </div>
 
       {!application ? (

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -130,7 +130,7 @@ export default function AdminMeetingsPage() {
           <div className="text-center py-16 text-gray-400">
             <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-300" />
             <p className="text-lg font-medium text-gray-500 mb-1">No meetings scheduled</p>
-            <p className="text-sm">Click &quot;Schedule Meeting&quot; to create one</p>
+            <p className="text-sm">Click "Schedule Meeting" to create one</p>
           </div>
         )}
       </div>

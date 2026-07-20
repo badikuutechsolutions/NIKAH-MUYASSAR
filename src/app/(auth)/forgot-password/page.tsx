@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
           <Mail className="h-8 w-8 text-green-600" />
         </div>
         <h1 className="text-2xl font-display font-bold text-charcoal mb-2">Check Your Email</h1>
-        <p className="text-gray-500 mb-6">We&apos;ve sent you a password reset link. Please check your inbox.</p>
+        <p className="text-gray-500 mb-6">We've sent you a password reset link. Please check your inbox.</p>
         <Link href="/login"><Button variant="primary">Back to Sign In</Button></Link>
       </motion.div>
     )
@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <h1 className="text-2xl font-display font-bold text-charcoal mb-2">Forgot Password</h1>
-      <p className="text-gray-500 mb-6">Enter your email and we&apos;ll send you a reset link.</p>
+      <p className="text-gray-500 mb-6">Enter your email and we'll send you a reset link.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input label="Email Address" type="email" placeholder="Enter your email" icon={<Mail className="h-4 w-4" />} value={email} onChange={(e) => setEmail(e.target.value)} required />
         <Button type="submit" variant="primary" className="w-full" loading={loading}>Send Reset Link</Button>

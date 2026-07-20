@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { Card, CardContent } from './card'
@@ -27,7 +27,7 @@ export function VerseCard({ arabic, translation, surah, verse, explanation }: Ve
             <Quote className="h-8 w-8 text-secondary/40 shrink-0 mt-2" />
             <div className="space-y-4">
               <ArabicText text={arabic} size="xl" className="text-right text-charcoal" />
-              <p className="text-charcoal/80 font-body leading-relaxed">&ldquo;{translation}&rdquo;</p>
+              <p className="text-charcoal/80 font-body leading-relaxed">"{translation}"</p>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold text-primary">
                   {surah} {verse}

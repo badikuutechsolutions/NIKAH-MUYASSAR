@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -38,7 +38,7 @@ export default function MySponsorshipsPage() {
       {sponsorships.length === 0 ? (
         <Card><CardContent className="p-12 text-center">
           <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-2">You haven&apos;t made any sponsorships yet.</p>
+          <p className="text-gray-500 mb-2">You haven't made any sponsorships yet.</p>
           <p className="text-sm text-gray-400">Browse applications and be the reason two hearts unite.</p>
         </CardContent></Card>
       ) : (
@@ -62,7 +62,7 @@ export default function MySponsorshipsPage() {
                           KSh ${s.amount_pledged} {s.currency} pledged
                         </p>
                         <p className="text-xs text-gray-400">{formatDate(s.pledged_at)}</p>
-                        {s.sponsor_message && <p className="text-xs text-gray-500 mt-1 italic">&ldquo;{s.sponsor_message}&rdquo;</p>}
+                        {s.sponsor_message && <p className="text-xs text-gray-500 mt-1 italic">"{s.sponsor_message}"</p>}
                       </div>
                     </div>
                     <div className="text-right">

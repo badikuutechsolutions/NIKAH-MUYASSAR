@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -13,14 +13,14 @@ export default function VerifyEmailPage() {
       </div>
       <h1 className="text-2xl font-display font-bold text-charcoal mb-2">Check Your Email</h1>
       <p className="text-gray-500 mb-6">
-        We&apos;ve sent a verification link to your email address. Please check your inbox and click the link to verify your account.
+        We've sent a verification link to your email address. Please check your inbox and click the link to verify your account.
       </p>
       <div className="space-y-3">
         <Link href="/login">
           <Button variant="primary">Go to Sign In</Button>
         </Link>
         <p className="text-sm text-gray-400">
-          Didn&apos;t receive the email?{' '}
+          Didn't receive the email?{' '}
           <button onClick={() => {}} className="text-primary hover:underline">Resend</button>
         </p>
       </div>

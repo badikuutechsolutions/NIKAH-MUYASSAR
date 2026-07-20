@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -95,7 +95,7 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
               <span className="text-3xl">{getCountryFlag(application.country_of_residence)}</span>
               <div>
                 <h1 className="text-2xl font-display font-bold text-charcoal">{alias}</h1>
-                <p className="text-sm text-gray-400">{application.country_of_residence}, {application.city} &middot; {application.gender === 'male' ? 'Brother' : 'Sister'}</p>
+                <p className="text-sm text-gray-400">{application.country_of_residence}, {application.city} · {application.gender === 'male' ? 'Brother' : 'Sister'}</p>
               </div>
             </div>
             <Badge variant="status" status={application.status}>{application.status}</Badge>
@@ -122,7 +122,7 @@ export default function SponsorApplicationDetail({ params }: { params: { id: str
             </div>
             <div>
               <h3 className="font-semibold text-charcoal mb-2">Community Reference</h3>
-              <p className="text-gray-600">{application.local_mosque_name}, {application.local_mosque_city} &middot; Imam: {application.imam_reference_name}</p>
+              <p className="text-gray-600">{application.local_mosque_name}, {application.local_mosque_city} · Imam: {application.imam_reference_name}</p>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -72,7 +72,7 @@ export default function HowItWorksPage() {
           <span className="text-primary">Supported by the Ummah</span>
         </h1>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-          Whether you&apos;re seeking support or wanting to sponsor, here&apos;s how our platform works.
+          Whether you're seeking support or wanting to sponsor, here's how our platform works.
         </p>
       </div>
 
@@ -217,7 +217,7 @@ export default function HowItWorksPage() {
           {activeTab === 'review' && (
             <div className="space-y-8">
               <p className="text-gray-500 text-center max-w-2xl mx-auto">
-                Our review process ensures that every application is authentic, sincere, and Islamically sound. Here&apos;s how we maintain trust and integrity.
+                Our review process ensures that every application is authentic, sincere, and Islamically sound. Here's how we maintain trust and integrity.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {REVIEW_STEPS.map((step) => {

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
@@ -128,7 +128,7 @@ export default function LandingPage() {
             <div className="glass rounded-2xl p-6 md:p-8 max-w-2xl mx-auto border border-secondary/20">
               <Quote className="h-6 w-6 text-secondary mb-2" />
               <p className="text-lg md:text-xl text-charcoal/90 italic font-quote leading-relaxed mb-2">
-                &ldquo;And among His signs is that He created for you from yourselves mates that you may find tranquility in them, and He placed between you affection and mercy.&rdquo;
+                "And among His signs is that He created for you from yourselves mates that you may find tranquility in them, and He placed between you affection and mercy."
               </p>
               <p className="text-sm text-primary font-semibold">Surah Ar-Rum, 30:21</p>
             </div>
@@ -213,7 +213,7 @@ export default function LandingPage() {
               className="text-secondary mb-6 leading-loose"
             />
             <p className="text-xl md:text-2xl text-white/90 font-quote italic leading-relaxed max-w-3xl mx-auto">
-              &ldquo;Marry the unmarried among you... If they should be poor, Allah will enrich them from His bounty. And Allah is all-Encompassing and Knowing.&rdquo;
+              "Marry the unmarried among you... If they should be poor, Allah will enrich them from His bounty. And Allah is all-Encompassing and Knowing."
             </p>
             <p className="text-secondary text-sm mt-4 font-semibold">Surah An-Nur, 24:32</p>
           </AnimatedSection>
@@ -273,14 +273,14 @@ export default function LandingPage() {
             <div className="text-center mb-12">
               <Badge variant="default" size="md" className="mb-3">Why Sponsor?</Badge>
               <h2 className="text-3xl md:text-4xl font-display font-bold text-charcoal">The Rewards of Sponsoring a Marriage</h2>
-              <p className="text-gray-500 mt-2 max-w-2xl mx-auto">The Prophet &#65018; said: &ldquo;There are three whose help is a right upon Allah: the one who marries wanting chastity.&rdquo; &mdash; Sunan at-Tirmidhi</p>
+              <p className="text-gray-500 mt-2 max-w-2xl mx-auto">The Prophet ﷺ said: "There are three whose help is a right upon Allah: the one who marries wanting chastity." — Sunan at-Tirmidhi</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { icon: Heart, title: 'Sadaqah Jariyah', desc: 'Every moment of their blessed marriage becomes ongoing charity for you. Every child they raise, every good deed they do &mdash; your reward continues.' },
+                { icon: Heart, title: 'Sadaqah Jariyah', desc: 'Every moment of their blessed marriage becomes ongoing charity for you. Every child they raise, every good deed they do — your reward continues.' },
                 { icon: Users, title: 'Strengthen the Ummah', desc: 'By facilitating a Halal marriage, you help protect brothers and sisters from haram relationships and strengthen the fabric of the Muslim community.' },
-                { icon: Award, title: 'Complete Half Their Deen', desc: 'The Prophet &#65018; said marriage completes half of one\'s faith. By sponsoring, you become a partner in this noble achievement.' },
+                { icon: Award, title: 'Complete Half Their Deen', desc: 'The Prophet ﷺ said marriage completes half of one\'s faith. By sponsoring, you become a partner in this noble achievement.' },
               ].map((item, i) => {
                 const Icon = item.icon
                 return (
@@ -365,7 +365,7 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { icon: BookOpen, title: 'Tayseer (Making Easy)', arabic: 'تيسير', desc: 'The Prophet &#65018; said: "Make things easy, do not make them difficult." Every UX decision reduces friction, making the path to marriage smoother.' },
+                { icon: BookOpen, title: 'Tayseer (Making Easy)', arabic: 'تيسير', desc: 'The Prophet ﷺ said: "Make things easy, do not make them difficult." Every UX decision reduces friction, making the path to marriage smoother.' },
                 { icon: Heart, title: 'Ta\'awun (Cooperation)', arabic: 'تعاون', desc: '"The believers in their mutual kindness, compassion, and sympathy are just like one body." Sponsors and applicants are two parts of the same Ummah.' },
                 { icon: Shield, title: 'Amanah (Trustworthiness)', arabic: 'أمانة', desc: '"The trustworthy merchant is with the prophets, the truthful, and the martyrs." Every data point, document, and sponsorship is handled with the highest trust.' },
               ].map((item, i) => {
@@ -445,7 +445,7 @@ export default function LandingPage() {
               </h2>
               <div className="bg-white/70 backdrop-blur rounded-2xl p-6 mb-8 max-w-2xl mx-auto border border-secondary/20">
                 <p className="text-lg font-quote italic text-charcoal/90">
-                  &ldquo;There are three whose help is a right upon Allah: the one striving in the path of Allah, the contracted slave who intends to pay off his contract, and the one who marries wanting chastity.&rdquo;
+                  "There are three whose help is a right upon Allah: the one striving in the path of Allah, the contracted slave who intends to pay off his contract, and the one who marries wanting chastity."
                 </p>
                 <p className="text-sm text-primary font-semibold mt-2">Sunan at-Tirmidhi, no. 1655</p>
               </div>
@@ -473,7 +473,7 @@ export default function LandingPage() {
                 Ready to Complete Half Your Deen?
               </h2>
               <p className="text-primary/80 text-lg mb-8 max-w-2xl mx-auto">
-                Whether you&rsquo;re seeking support or ready to sponsor a marriage, your journey starts here.
+                Whether you're seeking support or ready to sponsor a marriage, your journey starts here.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/apply">

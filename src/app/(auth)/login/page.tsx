@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -108,7 +108,7 @@ export default function LoginPage() {
       </Button>
 
       <p className="text-center text-sm text-gray-500 mt-6">
-        Don&apos;t have an account?{' '}
+        Don't have an account?{' '}
         <Link href="/register" className="text-primary font-semibold hover:text-primary-dark transition-colors">
           Create one
         </Link>

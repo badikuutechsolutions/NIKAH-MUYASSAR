@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -132,7 +132,7 @@ export default function SponsorBrowsePage() {
                     </div>
 
                     <p className="text-sm text-gray-500 line-clamp-2 mb-3 flex-1">
-                      &ldquo;{app.financial_hardship_desc?.slice(0, 100)}...&rdquo;
+                      "{app.financial_hardship_desc?.slice(0, 100)}..."
                     </p>
 
                     <div className="space-y-2 mb-3">
