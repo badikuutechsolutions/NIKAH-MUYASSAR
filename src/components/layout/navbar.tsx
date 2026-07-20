@@ -119,7 +119,10 @@ export function Navbar() {
                           </div>
                           Notifications
                         </Link>
-                        <Link href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-light-teal transition-colors">
+                        <Link
+                          href={profile?.role === 'admin' ? '/admin/profile' : profile?.role === 'sponsor' ? '/sponsor/profile' : '/dashboard/profile'}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-light-teal transition-colors"
+                        >
                           <User className="h-4 w-4" /> Profile Settings
                         </Link>
                         <hr className="my-1 border-gray-100" />
