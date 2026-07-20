@@ -365,9 +365,9 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { icon: BookOpen, title: 'Tayseer (Making Easy)', arabic: 'تيسير', desc: 'The Prophet ﷺ said: "Make things easy, do not make them difficult." Every UX decision reduces friction, making the path to marriage smoother.' },
-                { icon: Heart, title: 'Ta\'awun (Cooperation)', arabic: 'تعاون', desc: '"The believers in their mutual kindness, compassion, and sympathy are just like one body." Sponsors and applicants are two parts of the same Ummah.' },
-                { icon: Shield, title: 'Amanah (Trustworthiness)', arabic: 'أمانة', desc: '"The trustworthy merchant is with the prophets, the truthful, and the martyrs." Every data point, document, and sponsorship is handled with the highest trust.' },
+                { icon: BookOpen, title: 'Tayseer (Making Easy)', arabic: 'تيسير', desc: 'The Prophet ﷺ said: "Make things easy, do not make them difficult." We believe marriage should not be burdened by financial hardship — the entire process is designed to remove barriers, not create them.' },
+                { icon: Heart, title: 'Ta\'awun (Cooperation)', arabic: 'تعاون', desc: '"The believers in their mutual kindness, compassion, and sympathy are just like one body." When one part of the Ummah struggles, we all feel it. Sponsors and applicants are not strangers — they are two halves of the same body, supporting one another for the sake of Allah.' },
+                { icon: Shield, title: 'Amanah (Trustworthiness)', arabic: 'أمانة', desc: '"The trustworthy merchant is with the prophets, the truthful, and the martyrs." Trust is the foundation of this platform. Every application, every document, and every sponsorship is handled with the utmost care and integrity, as an amanah from Allah.' },
               ].map((item, i) => {
                 const Icon = item.icon
                 return (
