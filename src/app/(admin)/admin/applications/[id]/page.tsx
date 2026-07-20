@@ -65,8 +65,8 @@ export default function AdminApplicationDetail({ params }: { params: { id: strin
           <div><span className="text-gray-500">Gender:</span> <span className="capitalize">{application.gender}</span></div>
           <div><span className="text-gray-500">Marital Status:</span> <span className="capitalize">{application.marital_status}</span></div>
           <div><span className="text-gray-500">Nationality:</span> {application.nationality}</div>
-          <div><span className="text-gray-500">Amount Requested:</span> ${application.amount_requested}</div>
-          <div><span className="text-gray-500">Amount Raised:</span> ${application.amount_raised}</div>
+          <div><span className="text-gray-500">Amount Requested:</span> KSh {application.amount_requested}</div>
+          <div><span className="text-gray-500">Amount Raised:</span> KSh {application.amount_raised}</div>
           <div><span className="text-gray-500">Mosque:</span> {application.local_mosque_name}</div>
           <div><span className="text-gray-500">Imam:</span> {application.imam_reference_name}</div>
           <div><span className="text-gray-500">Submitted:</span> {formatDate(application.submitted_at)}</div>

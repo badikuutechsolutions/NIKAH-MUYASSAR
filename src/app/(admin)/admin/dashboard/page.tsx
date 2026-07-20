@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Users, FileText, Heart, DollarSign, TrendingUp, TrendingDown } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -45,7 +46,7 @@ export default function AdminDashboard() {
     { label: 'Approved', value: stats.approved.toString(), icon: Heart, color: 'bg-green-500' },
     { label: 'Completed (Marriages)', value: stats.completed.toString(), icon: Heart, color: 'bg-emerald-500' },
     { label: 'Total Sponsors', value: stats.total_sponsors.toString(), icon: Users, color: 'bg-purple-500' },
-    { label: 'Funds Raised', value: `$KSh ${stats.total_amount_raised.toLocaleString()}`, icon: DollarSign, color: 'bg-secondary' },
+    { label: 'Funds Raised', value: `KSh ${stats.total_amount_raised.toLocaleString()}`, icon: DollarSign, color: 'bg-secondary' },
   ]
 
   if (loading) return <div className="space-y-4"><Skeleton className="h-32 w-full" /><Skeleton className="h-64 w-full" /></div>
@@ -92,12 +93,12 @@ export default function AdminDashboard() {
                   <tr key={app.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="py-3 px-2 font-medium text-charcoal">{app.display_alias || app.full_name?.split(' ')[0]}</td>
                     <td className="py-3 px-2 text-gray-500">{app.country_of_residence}</td>
-                    <td className="py-3 px-2">KSh ${app.amount_requested}</td>
+                    <td className="py-3 px-2">KSh {app.amount_requested}</td>
                     <td className="py-3 px-2">
                       <Badge variant="status" status={app.status} size="sm">{app.status}</Badge>
                     </td>
                     <td className="py-3 px-2">
-                      <a href={`/admin/applications/${app.id}`} className="text-primary hover:underline text-xs">View</a>
+                      <Link href={`/admin/applications/${app.id}`} className="text-primary hover:underline text-xs">View</Link>
                     </td>
                   </tr>
                 ))}
@@ -113,15 +114,18 @@ export default function AdminDashboard() {
           { href: '/admin/applications', label: 'All Applications', icon: FileText },
           { href: '/admin/users', label: 'Manage Users', icon: Users },
           { href: '/admin/faqs', label: 'Manage FAQs', icon: FileText },
-          { href: '/admin/settings', label: 'Platform Settings', icon: FileText },
-        ].map((link) => (
-          <a key={link.href} href={link.href}>
-            <Card hover><CardContent className="p-4 text-center">
-              <link.icon className="h-6 w-6 text-primary mx-auto mb-1" />
-              <p className="text-sm font-medium text-charcoal">{link.label}</p>
-            </CardContent></Card>
-          </a>
-        ))}
+          { href: '/admin/sponsorships', label: 'Sponsorships', icon: DollarSign },
+        ].map((link) => {
+          const Icon = link.icon
+          return (
+            <Link key={link.href} href={link.href}>
+              <Card hover><CardContent className="p-4 text-center">
+                <Icon className="h-6 w-6 text-primary mx-auto mb-1" />
+                <p className="text-sm font-medium text-charcoal">{link.label}</p>
+              </CardContent></Card>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

@@ -19,7 +19,7 @@ export default function AdminSuccessStoriesPage() {
   const [form, setForm] = useState({ couple_alias: '', story_text: '', story_excerpt: '', country: '', is_published: false, is_featured: false })
 
   useEffect(() => {
-    supabase.from('success_stories').select('*').order('created_at', { ascending: false }).then(({ data }) => setStories(data || []))
+    supabase.from('success_stories').select('*').order('created_at', { ascending: false }).then((res: any) => setStories(res.data || []))
   }, [])
 
   const handleSave = async () => {

@@ -20,8 +20,8 @@ export default function AdminFAQsPage() {
   const [form, setForm] = useState({ question: '', answer: '', category: 'general', order_index: 0 })
 
   useEffect(() => {
-    supabase.from('faqs').select('*').order('order_index').then(({ data }) => {
-      setFaqs(data || [])
+    supabase.from('faqs').select('*').order('order_index').then((res: any) => {
+      setFaqs(res.data || [])
       setLoading(false)
     })
   }, [])
@@ -38,8 +38,8 @@ export default function AdminFAQsPage() {
     }
     setShowModal(false)
     setEditItem(null)
-    const { data } = await supabase.from('faqs').select('*').order('order_index')
-    setFaqs(data || [])
+    const res2 = await supabase.from('faqs').select('*').order('order_index')
+    setFaqs(res2.data || [])
   }
 
   const handleDelete = async (id: string) => {

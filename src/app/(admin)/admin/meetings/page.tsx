@@ -12,8 +12,8 @@ export default function AdminMeetingsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.from('meetings').select('*').order('meeting_date', { ascending: false }).then(({ data }) => {
-      setMeetings(data || [])
+    supabase.from('meetings').select('*').order('meeting_date', { ascending: false }).then((res: any) => {
+      setMeetings(res.data || [])
       setLoading(false)
     })
   }, [])
