@@ -12,7 +12,13 @@ export async function GET(request: Request) {
   }
 
   const { data: { user } } = await (await createRouteHandlerClient({ cookies })).auth.getUser()
-  const role = user?.app_metadata?.role || 'applicant'
+  const role = user?.app_metadata?.role
+
+  // New Google users don't have a role yet — send them to choose
+  if (!role) {
+    return NextResponse.redirect(new URL('/choose-role', requestUrl.origin))
+  }
+
   const redirects: Record<string, string> = {
     applicant: '/dashboard',
     sponsor: '/sponsor/dashboard',
