@@ -39,7 +39,7 @@ export default function ChooseRolePage() {
       applicant: '/dashboard',
       sponsor: '/sponsor/dashboard',
     }
-    router.push(redirects[role])
+    window.location.href = redirects[role]
   }
 
   return (

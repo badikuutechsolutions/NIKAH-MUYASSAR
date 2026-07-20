@@ -16,10 +16,16 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(getDashboardUrl(role), req.url))
   }
 
+  // Helper: redirect role-less users to choose-role instead of unauthorized
+  const role = session?.user?.app_metadata?.role || session?.user?.user_metadata?.role
+
+  if (!role && session && !path.startsWith('/choose-role') && !path.startsWith('/api') && !path.startsWith('/_next')) {
+    return NextResponse.redirect(new URL('/choose-role', req.url))
+  }
+
   // Protected routes
   if (path.startsWith('/apply') || path.startsWith('/dashboard')) {
     if (!session) return redirectToLogin(req)
-    const role = session.user?.app_metadata?.role || session.user?.user_metadata?.role
     if (role !== 'applicant') {
       return NextResponse.redirect(new URL('/unauthorized', req.url))
     }
@@ -27,7 +33,6 @@ export async function middleware(req: NextRequest) {
 
   if (path.startsWith('/sponsor')) {
     if (!session) return redirectToLogin(req)
-    const role = session.user?.app_metadata?.role || session.user?.user_metadata?.role
     if (role !== 'sponsor') {
       return NextResponse.redirect(new URL('/unauthorized', req.url))
     }
@@ -35,7 +40,6 @@ export async function middleware(req: NextRequest) {
 
   if (path.startsWith('/admin')) {
     if (!session) return redirectToLogin(req)
-    const role = session.user?.app_metadata?.role || session.user?.user_metadata?.role
     if (!['admin', 'reviewer'].includes(role)) {
       return NextResponse.redirect(new URL('/unauthorized', req.url))
     }
