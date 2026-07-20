@@ -8,13 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ArabicText } from '@/components/ui/arabic-text'
 import { Badge } from '@/components/ui/badge'
+import { supabase } from '@/lib/supabase'
 
-const COUNTER_DATA = [
-  { icon: Heart, value: 0, suffix: '', label: 'Couples Married' },
-  { icon: DollarSign, value: 0, suffix: '', label: 'Total Sponsored', prefix: '$' },
-  { icon: MapPin, value: 0, suffix: '', label: 'Countries Reached' },
-  { icon: Users, value: 0, suffix: '', label: 'Active Sponsors' },
-]
+const STAT_ICONS = [Heart, DollarSign, MapPin, Users]
+const STAT_LABELS = ['Couples Married', 'Total Sponsored', 'Countries Reached', 'Active Sponsors']
 
 const ISLAMIC_WISDOM = [
   { text: '"When a servant marries, he has completed half of his religion, so let him fear Allah regarding the remaining half."', source: "Shu'ab al-Iman, no. 5486" },
@@ -63,6 +60,23 @@ function AnimatedSection({ children, className }: { children: React.ReactNode; c
 
 export default function LandingPage() {
   const [wisdomIndex, setWisdomIndex] = useState(0)
+
+  const [stats, setStats] = useState([0, 0, 0, 0])
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const { data: statsRow } = await supabase.from('platform_stats').select('*').single()
+      if (statsRow) {
+        setStats([
+          statsRow.total_completed || 0,
+          statsRow.total_amount_raised || 0,
+          statsRow.countries_reached || 0,
+          statsRow.total_sponsors || 0,
+        ])
+      }
+    }
+    fetchStats()
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -174,29 +188,26 @@ export default function LandingPage() {
         <div className="bg-gradient-to-r from-primary to-primary-dark py-16">
           <div className="max-w-6xl mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {COUNTER_DATA.map((stat) => {
-                const Icon = stat.icon
-                return (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center"
-                  >
-                    <div className="flex justify-center mb-3">
-                      <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center">
-                        <Icon className="h-6 w-6 text-secondary" />
-                      </div>
+              {STAT_ICONS.map((Icon, i) => (
+                <motion.div
+                  key={STAT_LABELS[i]}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="text-center"
+                >
+                  <div className="flex justify-center mb-3">
+                    <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center">
+                      <Icon className="h-6 w-6 text-secondary" />
                     </div>
-                    <div className="text-3xl md:text-4xl font-bold text-white font-display">
-                      {stat.prefix || ''}<CountUp end={stat.value} />{stat.suffix}
-                    </div>
-                    <div className="text-white/70 text-sm mt-1 font-medium">{stat.label}</div>
-                  </motion.div>
-                )
-              })}
+                  </div>
+                  <div className="text-3xl md:text-4xl font-bold text-white font-display">
+                    {i === 1 ? 'KSh ' : ''}<CountUp end={stats[i]} />
+                  </div>
+                  <div className="text-white/70 text-sm mt-1 font-medium">{STAT_LABELS[i]}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
