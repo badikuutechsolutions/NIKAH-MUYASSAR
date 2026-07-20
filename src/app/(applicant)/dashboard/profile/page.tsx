@@ -63,7 +63,7 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     setSaving(true)
-    const updateData = { ...form }
+    const updateData: any = { ...form }
     if (profilePhoto) updateData.profile_photo = profilePhoto
     const { error } = await supabase.from('profiles').update(updateData).eq('id', user?.id)
     if (error) { console.error('Profile update error:', error); toast.error(error.message); setSaving(false); return }
